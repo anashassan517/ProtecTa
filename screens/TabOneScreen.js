@@ -834,8 +834,6 @@ import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { doc, getDoc, getDocs } from "firebase/firestore";
 import { FormData } from "react-native";
-// import { client } from "@gradio/client";
-// import { client } from "@gradio/client";
 
 
 const TabOneScreen = ({ navigation }) => {
@@ -846,7 +844,7 @@ const TabOneScreen = ({ navigation }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const cameraRef = useRef(null);
-  // let photo;
+  
 
   useEffect(() => {
     const askForPermission = async () => {
@@ -974,10 +972,9 @@ const TabOneScreen = ({ navigation }) => {
             console.log("before form data:");
             const formData = new FormData();
             console.log("after form data:");
-            // formData.append('image1', { uri: lastPhotoURI, type: 'image/jpeg', name: 'photo.jpg' });
-            // formData.append('image2', { uri: image2URL, type: 'image/jpeg', name: 'image2.jpg' });
-            formData.set("image1", image1);
-            formData.set("image2", image2);
+            formData.append('image1', { uri: lastPhotoURI, type: 'image/jpeg', name: 'photo.jpg' });
+             formData.append('image2', { uri: image2URL, type: 'image/jpeg', name: 'image2.jpg' });
+          
 
             const options = {
               method: 'POST',
@@ -1014,36 +1011,6 @@ const TabOneScreen = ({ navigation }) => {
       setUploading(false);
     }
   };
-
-  //Hugging face
-
-  // const handleAuthentication = async () => {
-  //   try {
-  //     // Load the Hugging Face model
-  //     const app = await client("https://faceonlive-face-recognition-sdk.hf.space/--replicas/r98wm/");
-
-  //     // Prepare example images (you can replace these with your actual images)
-  //     const exampleImage1 = await fetch("https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png");
-  //     const exampleImage2 = await fetch("https://raw.githubusercontent.com/gradio-app/gradio/main/test/test_files/bus.png");
-  //     const blobImage1 = await exampleImage1.blob();
-  //     const blobImage2 = await exampleImage2.blob();
-
-  //     // Make the prediction using the compare_face endpoint
-  //     const result = await app.predict("/compare_face", [blobImage1, blobImage2]);
-
-  //     // Handle the API response
-  //     console.log(result.data);
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // };
-
-
-
-
-
-
-
   if (!hasPermission) {
     return (
       <View style={styles.container}>
@@ -1104,7 +1071,6 @@ const TabOneScreen = ({ navigation }) => {
       </ImageBackground>
     );
   }
-
   return (
     <Camera
       style={{ height: "10%", flex: 1 }}
