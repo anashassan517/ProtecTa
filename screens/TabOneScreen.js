@@ -247,9 +247,13 @@ const TabOneScreen = ({ navigation }) => {
   if (uploading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Authenticating...</Text>
-      </View>
+      <Image source={require('../assets/images/Uploading.gif')} />
+
+      <ActivityIndicator size="large" color="#0000ff" />
+      <Text>Please Wait...</Text>
+      {/* <Text>Image uploaded successfully!</Text> */}
+    </View>
+
     );
   }
 

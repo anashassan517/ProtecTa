@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Alert,
+  Image
 } from "react-native";
 import { Camera } from "expo-camera";
 import { useIsFocused } from "@react-navigation/native";
@@ -108,6 +109,8 @@ const FacialRegister = ({ navigation }) => {
   if (uploadSuccess) {
     return (
       <View style={styles.container}>
+        <Image source={require('../assets/images/Uploading.gif')} />
+
         <Text>Image uploaded successfully!</Text>
       </View>
     );
@@ -116,9 +119,13 @@ const FacialRegister = ({ navigation }) => {
   if (uploading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Registering...</Text>
-      </View>
+      <Image source={require('../assets/images/Uploading.gif')} />
+
+      <ActivityIndicator size="large" color="#0000ff" />
+      <Text>Registering Please Wait...</Text>
+      {/* <Text>Image uploaded successfully!</Text> */}
+    </View>
+
     );
   }
 

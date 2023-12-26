@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
+  Alert,ActivityIndicator
 } from "react-native";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
@@ -14,15 +14,20 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(""); // New state for success/error messages
+  const [loading, setLoading] = useState(false);
+
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
       setMessage("Login successful!"); // Set success message
+      setLoading(false);
       // Alert("Login successful!");
       navigation.navigate("Root");
     } catch (error) {
+      setLoading(false);
       setMessage(`Login Error: ${error.message}`); // Set error message
     }
   };
@@ -55,13 +60,17 @@ const LoginScreen = ({ navigation }) => {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>LOGIN</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}   disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator size="small" color="white" />
+        ) : (
+          <Text style={styles.buttonText}>LOGIN</Text>
+        )
+        }
       </TouchableOpacity>
       {message ? <Text style={styles.message}>{message}</Text> : null}
-      {/* <TouchableOpacity style={styles.button} onPress={navigateToLoginOption}>
-        <Text style={styles.buttonText}>More Option</Text>
-      </TouchableOpacity> */}
+    
       <TouchableOpacity onPress={navigateToSignUp}>
         <Text style={styles.linkText}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
