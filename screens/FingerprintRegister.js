@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Alert } from "react-native";
+import { View, Text, Button, Alert ,StyleSheet,Image} from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { AntDesign } from "@expo/vector-icons";
 // import Modal from "react-native-modal";
@@ -38,13 +38,13 @@ export default function TabTwoScreen({ navigation }) {
         // Authentication successful, show the modal
 
         console.log("Authentication Success");
-        Alert.alert("Success", "Fingerprint Success");
+        Alert.alert("Success", "Fingerprint Register Successfully");
         navigation.navigate("Signature Register");
 
         // Alert(result.success);
       } else {
         // Authentication failed or was cancelled
-        Alert.alert("Error", "Authentication failed!");
+        Alert.alert("Error", "Fingerprint Register failed!");1
         console.log("Authentication failed");
       }
     } catch (error) {
@@ -54,6 +54,10 @@ export default function TabTwoScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+       <Image 
+      source={require("../assets/images/Fingerprint-login.png")}
+      style={styles.image}
+      />
       <Text>Fingerprint Recognition</Text>
       {isBiometricSupported && (
         <Button
@@ -65,3 +69,23 @@ export default function TabTwoScreen({ navigation }) {
     </View>
   );
 }
+
+
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    marginTop:0,
+    paddingTop:0,
+    resizeMode: "cover",
+    height: 400,
+    width: 430,
+    marginBottom: 10,
+  }})

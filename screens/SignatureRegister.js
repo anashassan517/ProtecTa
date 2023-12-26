@@ -1,253 +1,3 @@
-// import React, { useRef } from "react";
-// import { View, Button, StyleSheet } from "react-native";
-// import Signature from "react-native-signature-canvas";
-
-// export default function SignaturePad() {
-//   const signatureRef = useRef(null);
-
-//   const handleSignature = async () => {
-//     if (signatureRef.current) {
-//       const signature = await signatureRef.current.readSignature();
-//       console.log("Signature:", signature);
-//       // You can handle the signature data as needed (e.g., save it to a file, send it to a server, etc.).
-//     }
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Signature
-//         ref={signatureRef}
-//         onOK={handleSignature}
-//         onEmpty={() => console.log("Empty")}
-//         descriptionText="Sign"
-//       />
-//       <Button title="Save Signature" onPress={handleSignature} />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-// });
-
-// import React, { useRef } from "react";
-// import { View, Text, Button, StyleSheet } from "react-native";
-// import Signature from "react-native-signature-canvas";
-
-// export default function SignatureRegister() {
-//   const signatureRef = useRef(null);
-
-//   const handleSignature = async () => {
-//     if (signatureRef.current) {
-//       const signature = await signatureRef.current.readSignature();
-//       console.log("Signature:", signature);
-//       // You can handle the signature data as needed (e.g., save it to a file, send it to a server, etc.).
-//     }
-//   };
-//   const imgWidth = 400;
-//   const imgHeight = 600;
-//   const style = `.m-signature-pad {box-shadow: none; border: none; }
-//                 .m-signature-pad--body {border: none;}
-//                 .m-signature-pad--footer {display: none; margin: 0px;}
-//                 body,html {
-//                 width: ${imgWidth}px; height: ${imgHeight}px;}`;
-//   return (
-//     <View style={styles.container}>
-//       <View style={{ width: imgWidth, height: imgHeight }}>
-//         <Signature
-//           ref={signatureRef}
-//           overlaySrc="https://pngimg.com/image/88090"
-//           overlayWidth={imgWidth}
-//           overlayHeight={imgHeight}
-//           webStyle={style}
-//           onOK={handleSignature}
-//           onEmpty={() => console.log("Empty")}
-//           descriptionText="Please sign Abobe"
-//         />
-//       </View>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   instructions: {
-//     fontSize: 18,
-//     marginBottom: 20,
-//   },
-// });
-
-// import React, { useRef, useState } from "react";
-// import { View, Text, Button, StyleSheet, Image, Alert } from "react-native";
-// import Signature from "react-native-signature-canvas";
-// import { MaterialIcons } from "@expo/vector-icons";
-// import {
-//   getAuth,
-//   getStorage,
-//   getFirestore,
-//   ref,
-//   uploadBytes,
-//   getDownloadURL,
-//   collection,
-//   addDoc,
-// } from "firebase/firestore";
-
-// const SignatureRegister = ({ navigation }) => {
-
-//   const signatureRef = useRef(null);
-//   const [signatureImage, setSignatureImage] = useState(null);
-
-//   const handleSignature = async () => {
-//     if (signatureRef.current) {
-//       const signature = await signatureRef.current.readSignature();
-//       setSignatureImage(signature);
-//     }
-//   };
-
-//   const handleClear = () => {
-//     if (signatureRef.current) {
-//       signatureRef.current.clearSignature();
-//       setSignatureImage(null);
-//     }
-//   };
-
-//   const handleSave = async () => {
-//     if (signatureImage) {
-//       try {
-//         // Your Firebase storage and Firestore logic...
-
-//         console.log("Signature uploaded to Firebase Storage and Firestore.");
-//         Alert.alert("Success", "All Factors Registered! Now Login To Continue");
-//         navigation.navigate("Login");
-//       } catch (error) {
-//         console.error("Error saving signature:", error.message);
-//         Alert.alert("Error", "Failed to save signature. Please try again.");
-//       }
-//     }
-//   };
-
-// const signatureRef = useRef(null);
-// const [signatureImage, setSignatureImage] = useState(null);
-
-// const handleSignature = async () => {
-//   console.log("Signature Data:");
-
-//   if (signatureRef.current) {
-//     const signature = await signatureRef.current.readSignature();
-//     console.log("Signature Data:", signature);
-//     setSignatureImage(signature);
-//   }
-// };
-
-// const handleClear = () => {
-//   if (signatureRef.current) {
-//     signatureRef.current.clearSignature();
-//     setSignatureImage(null);
-//   }
-// };
-
-// const handleSave = async () => {
-//   if (signatureImage) {
-//     console.log("anas");
-//   }
-
-// if (signatureImage) {
-//   try {
-//     console.log("handle save");
-//     const user = getAuth().currentUser;
-//     const storage = getStorage();
-//     const db = getFirestore();
-
-//     // Save to Firebase Storage
-//     const storageRef = ref(
-//       storage,
-//       `userData/${user.uid}/${user.displayName}/signature/${user.displayName}.jpg`
-//     );
-//     await uploadBytes(storageRef, signatureImage, "data_url");
-
-//     // Get the download URL
-//     const downloadURL = await getDownloadURL(storageRef);
-
-//     // Save URL to Firestore
-//     const userRef = collection(db, "users");
-//     const docRef = collection(userRef, user.uid);
-//     await addDoc(docRef, {
-//       signatureURL: downloadURL,
-//     });
-
-//     console.log("Signature uploaded to Firebase Storage and Firestore.");
-//     Alert.alert("Success", "All Factors Registered! Now Login To Continue");
-//     navigation.navigate("Login");
-//   } catch (error) {
-//     console.error("Error saving signature:", error.message);
-//     Alert.alert("Error", "Failed to save signature. Please try again.");
-//   }
-// }
-// };
-
-// const imgWidth = 400;
-// const imgHeight = 600;
-// const style = `.m-signature-pad {box-shadow: none; border: none; }
-//               .m-signature-pad--body {border: none;}
-//               .m-signature-pad--footer {display: none; margin: 0px;}
-//               body,html {
-//                 width: ${imgWidth}px; height: ${imgHeight}px;}`;
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={{ width: imgWidth, height: imgHeight }}>
-//         <Signature
-//           ref={signatureRef}
-//           overlaySrc="https://pngimg.com/image/88090"
-//           overlayWidth={imgWidth}
-//           overlayHeight={imgHeight}
-//           webStyle={style}
-//           onBegin={() => console.log("Signature drawing started")}
-//           onEnd={handleSignature} // Call handleSignature when drawing ends
-//           descriptionText="Please sign Abobe"
-//         />
-//       </View>
-//       {signatureImage && (
-//         <View style={{ marginTop: 20 }}>
-//           <Text>Saved Signature:</Text>
-//           <Image
-//             source={{ uri: signatureImage }}
-//             style={{ width: 100, height: 100, marginTop: 10 }}
-//           />
-//         </View>
-//       )}
-//       <View style={styles.Button1}>
-//         <Button title="Clear" onPress={handleClear} />
-//         <Button title="Upload" onPress={handleSave} />
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   Button1: {
-//     flexDirection: "row",
-//     justifyContent: "space-around",
-//     width: "80%",
-//   },
-// });
-
-// export default SignatureRegister;
-
-// workded perfect!!
 import React, { useRef, useState } from "react";
 import {
   SafeAreaView,
@@ -257,7 +7,7 @@ import {
   Image,
   TextInput,
   View,
-  Alert,
+  Alert,ActivityIndicator
 } from "react-native";
 import SignatureScreen from "react-native-signature-canvas";
 import { getAuth } from "firebase/auth";
@@ -273,6 +23,8 @@ import {
 const SignatureRegister = ({ navigation }) => {
   const [signature, setSign] = useState(null);
   // const [colorText, setPenColor] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
   const uref = useRef();
 
   // Called after ref.current.readSignature() reads a non-empty base64 string
@@ -302,6 +54,8 @@ const SignatureRegister = ({ navigation }) => {
 
   const handleSave = async () => {
     try {
+      setUploading(true);
+
       const user = getAuth().currentUser;
       const storage = getStorage();
       const db = getFirestore();
@@ -329,13 +83,35 @@ const SignatureRegister = ({ navigation }) => {
       });
 
       console.log("Signature uploaded to Firebase Storage and Firestore.");
+      setUploadSuccess(true);
+
       Alert.alert("Success", "All Factors Registered! Now Login To Continue");
       navigation.navigate("Login");
     } catch (error) {
       console.error("Error saving signature:", error.message);
       Alert.alert("Error", "Failed to save signature. Please try again.");
     }
+    finally {
+      setUploading(false);
+    }
   };
+
+  if (uploadSuccess) {
+    return (
+      <View style={styles.container}>
+        <Text>Signature Register Successfully!</Text>
+      </View>
+    );
+  }
+
+  if (uploading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Registering Please Wait...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -392,12 +168,16 @@ const SignatureRegister = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    // width: 400,
+    margin:0,
+    padding:0,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     height: 500,
-    padding: 40,
+    width: 400,
+    paddingTop: 50,
+
+    padding: 10,
   },
   preview: {
     width: 335,

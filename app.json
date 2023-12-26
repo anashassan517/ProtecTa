@@ -1,5 +1,8 @@
 {
   "expo": {
+    "extra": {
+      "proxy": "http://192.168.0.103:3000/compare_faces"
+    },
     "plugins": [
       [
         "expo-camera",

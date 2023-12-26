@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Alert,Image,StyleSheet } from "react-native";
+import { View, Text, Button, Alert, Image, StyleSheet } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
-// import { AntDesign } from "@expo/vector-icons";
-// import Svg, { Circle, Rect } from 'react-native-svg';
 
-// import Modal from "react-native-modal";
-
-export default function TabTwoScreen({navigation}) {
+export default function TabTwoScreen({ navigation }) {
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
-  // const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     checkBiometricSupport();
@@ -32,14 +27,11 @@ export default function TabTwoScreen({navigation}) {
       });
 
       if (result.success) {
-        // Authentication successful, show the modal
 
         console.log("Authentication Success");
-Alert.alert("Success","Fingerprint Authenticated!");
-navigation.navigate("Facial Login")
-        // Alert(result.success);
+        Alert.alert("Success", "Fingerprint Authenticated!");
+        navigation.navigate("Facial Login")
       } else {
-        // Authentication failed or was cancelled
         console.log("Authentication failed");
       }
     } catch (error) {
@@ -49,9 +41,9 @@ navigation.navigate("Facial Login")
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-     <Image 
-      source={require("../assets/images/Fingerprint-login.png")}
-      style={styles.image}
+      <Image
+        source={require("../assets/images/Fingerprint-login.png")}
+        style={styles.image}
       />
       <Text>Fingerprint Recognition</Text>
       {isBiometricSupported && (
@@ -75,10 +67,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    marginTop:0,
-    paddingTop:0,
+    marginTop: 0,
+    paddingTop: 0,
     resizeMode: "cover",
     height: 400,
     width: 430,
     marginBottom: 10,
-  }})
+  }
+})
