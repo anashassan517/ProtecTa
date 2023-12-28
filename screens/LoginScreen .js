@@ -24,8 +24,9 @@ const LoginScreen = ({ navigation }) => {
       await signInWithEmailAndPassword(auth, email, password);
       setMessage("Login successful!"); // Set success message
       setLoading(false);
-      // Alert("Login successful!");
+      Alert.alert("Success","Login successful!");
       navigation.navigate("Root");
+      // navigation.navigate("Protected");
     } catch (error) {
       setLoading(false);
       setMessage(`Login Error: ${error.message}`); // Set error message

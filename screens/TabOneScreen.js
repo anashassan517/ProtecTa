@@ -6,17 +6,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Alert, Dimensions
+  Alert,Image
 } from "react-native";
 import { Camera } from "expo-camera";
 import { useIsFocused } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { doc, getDoc, getDocs } from "firebase/firestore";
-import { FormData } from "react-native";
-import * as FileSystem from 'expo-file-system';
-import base64js from 'base64-js';
 
 
 const TabOneScreen = ({ navigation }) => {
@@ -24,7 +19,7 @@ const TabOneScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [lastPhotoURI, setLastPhotoURI] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const cameraRef = useRef(null);
 
@@ -54,173 +49,66 @@ const TabOneScreen = ({ navigation }) => {
     }
   };
 
-  // const handleAuthentication = async () => {
-  //   try {
-  //     console.log("handle authentication called");
+// API PYTHON CODE FLASk
+const handleAuthentication = async () => {
+  try {
+    setLoading(true);
 
+    const auth = getAuth();
+    const user = auth.currentUser;
+    // Assuming last photo URI is stored in lastPhotoURI variable
+    const photo = lastPhotoURI;  // Replace with your actual URI
+    // Upload last photo to Firebase Storage
+    const storagePath = `userData/${user.uid}/${user.email}/Login/${user.displayName}.jpg`;
+    await uploadToFirebaseStorage(photo, storagePath);
+    // Call the Python Flask API with user details and last photo URI
+    const response = await fetch('http://172.16.57.235:5000/recognize', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_uid: user.uid,
+        user_email: user.email,
+        user_display_name: user.displayName,
+        last_photo_uri: storagePath,
+      }),
+    });
 
-  //     setUploading(true);
+    const parsedResponse = await response.json();
+    if (JSON.stringify(parsedResponse).includes("Same")) {
 
-
-
-  //     const auth = getAuth();
-  //     const user = auth.currentUser;
-  //     console.log("photo.uri :",lastPhotoURI);
-
-  //     if (user) {
-  //       const storage = getStorage();
-  //       const image2Ref = ref(
-  //         storage,
-  //         `userData/${user.uid}/${user.email}/Facial/${user.displayName}.jpg`
-
-  //       );
-
-  //       try {
-  //         const image2URL = await getDownloadURL(image2Ref);
-  //         console.log("Before Blob and image2url:",image2URL);
-
-  //         const formData = new FormData();
-  //         const image1 = new Blob([lastPhotoURI], { type: "image/jpeg" });
-  //         const image2 = new Blob([image2URL], { type: "image/jpeg" });
-  //         console.log("After Blob");
-
-  //         formData.set("image1", image1);
-  //         formData.set("image2", image2);
-
-  //         const options = {
-  //           method: "POST",
-  //           headers: {
-  //             "X-BLOBR-KEY": "mubAKvdrupZP93nWkw79aUHkNMSFiaPK",
-  //           },
-  //           body: formData,
-  //         };
-
-  //         const response = await fetch(
-  //           "https://api.faceonlive.com/sntzbspfsdupgid1/api/face_compare",
-  //           options
-  //         );
-  //         const result = await response.json();
-
-  //         console.log(result);
-
-  //         console.log("End Function");
-
-  //         if (result.data.result === "Same") {
-  //           setUploadSuccess(true);
-  //         } else {
-  //           Alert.alert("Authentication Failed", "Face does not match.");
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching image2URL from Firebase Storage:", error);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Authentication error:", error);
-  //   } finally {
-  //     setUploading(false);
-  //   }
-  // };
-  //new
-
-  const handleAuthentication = async () => {
-    try {
-      console.log("handle authentication called");
-      // Step 2: Fetch the second photo URL from Firestore
-      const auth = getAuth();
-      const user = auth.currentUser;
-  
-      if (user) {
-        const db = getFirestore();
-        const userRef = doc(db, "UsersData", user.uid);
-        const userDataRef = collection(userRef, "FacialImages");
-  
-        try {
-          const querySnapshot = await getDocs(userDataRef);
-          if (!querySnapshot.empty) {
-            const document = querySnapshot.docs[0].data();
-            const image2URL = document.facialImages[0].images;
-  
-            console.log("Image2URL fetched successfully:", image2URL);
-            console.log("lastPhotoURI:", lastPhotoURI);
-  
-            // Download the image from URL
-            const down = await fetch(image2URL);
-            const image2Data = await down.blob();
-  
-            console.log("Image2Data: ", image2Data);
-  
-            // Convert blob data to base64
-            const buffer = await new Response(image2Data).arrayBuffer();
-            const uint8Array = new Uint8Array(buffer);
-            const image2Base64 = base64js.fromByteArray(uint8Array);
-            // console.log("image2Base64: ", image2Base64);
-
-  
-            // Assuming lastPhotoURI is already a file URI
-            const requestBody = new FormData();
-            requestBody.append('image1', {
-              uri: lastPhotoURI,
-              type: 'image/jpeg',
-              name: 'image1.jpg',
-            });
-            requestBody.append('image2', {
-              uri: `data:image/jpeg;base64,${image2Base64}`,
-              type: 'image/jpeg',
-              name: 'image2.jpg',
-            });
-  
-            const options = {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'X-BLOBR-KEY': 'mubAKvdrupZP93nWkw79aUHkNMSFiaPK',
-              },
-              body: requestBody,
-            };
-  
-            const response1 = await fetch('http://192.168.0.103:3000/compare_faces', options);
-            console.log("response blob invoked");
-            const result = await response1.text();
-          } else {
-            console.error("No facial images found in Firestore.");
-          }
-        } catch (error) {
-          console.error("Error fetching facial images from Firestore:", error);
-        }
-      }
-    } catch (error) {
-      console.error("Authentication error:", error);
-    } finally {
-      setUploading(false);
+      Alert.alert('Success', 'Authentication successful!');
+      navigation.navigate("Signature Login");
+    } else {
+      Alert.alert('Authentication Failed', 'Not authenticated!');
     }
-  };
+
+
+
+  } catch (error) {
+    console.error('Error:', error);
+  }
+  finally {
+    setLoading(false);
+  }
   
-  
+};
 
-  //   const handleAuthentication = async () => {
-  //   try {
-  //     const image1 =lastPhotoURI;
-  //     const image2 = lastPhotoURI;
-  //     const image1Base64 = await convertImageToBase64(lastPhotoURI);
-  // const image2Base64 = await convertImageToBase64(lastPhotoURI);
+const uploadToFirebaseStorage = async (fileURI, storagePath) => {
+  const storage = getStorage();
+  const imageRef = ref(
+    storage,
+    storagePath
+  );
+  const response = await fetch(fileURI);
+  const blob = await response.blob();
+  await uploadBytes(imageRef, blob);
+  const downloadURL = await getDownloadURL(imageRef);
+console.log("Download url: ",downloadURL)
+};
 
-  //     const options = {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'X-BLOBR-KEY': 'mubAKvdrupZP93nWkw79aUHkNMSFiaPK',
-  //       },
-  //       body: JSON.stringify({ image1Base64, image2Base64 }),
-  //     };
 
-  //     const response = await fetch('http://192.168.0.102:3000/compare_faces', options);
-  //     const result = await response.json();
-
-  //     console.log(result);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   if (!hasPermission) {
     return (
@@ -236,26 +124,6 @@ const TabOneScreen = ({ navigation }) => {
     );
   }
 
-  if (uploadSuccess) {
-    return (
-      <View style={styles.container}>
-        <Text>Image Authenticated successfully!</Text>
-      </View>
-    );
-  }
-
-  if (uploading) {
-    return (
-      <View style={styles.container}>
-      <Image source={require('../assets/images/Uploading.gif')} />
-
-      <ActivityIndicator size="large" color="#0000ff" />
-      <Text>Please Wait...</Text>
-      {/* <Text>Image uploaded successfully!</Text> */}
-    </View>
-
-    );
-  }
 
   if (lastPhotoURI !== null) {
     return (

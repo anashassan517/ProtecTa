@@ -8,8 +8,9 @@ export const firebaseConfig = {
   projectId: "protecta-ca1ba",
   storageBucket: "protecta-ca1ba.appspot.com",
   messagingSenderId: "306672016487",
-  appId: "1:306672016487:web:8093e15dc140f4b4c008c2",
+  appId: "1:306672016487:web:8093e15dc140f4b4c008c2"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

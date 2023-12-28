@@ -35,7 +35,6 @@ const FacialRegister = ({ navigation }) => {
   }, [isFocused]);
 
   const handleUpload = async () => {
-    // navigation.navigate("Fingerprint Register");
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -125,7 +124,6 @@ const FacialRegister = ({ navigation }) => {
       <Text>Registering Please Wait...</Text>
       {/* <Text>Image uploaded successfully!</Text> */}
     </View>
-
     );
   }
 

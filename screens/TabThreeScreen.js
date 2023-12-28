@@ -68,7 +68,7 @@ const TabThreeScreen = ({ navigation }) => {
     //   });
     //   console.log("Signature uploaded to Firebase Storage and Firestore.");
     //   Alert.alert("Success", "All Factors Registered! Now Login To Continue");
-    //   navigation.navigate("Login");
+      navigation.navigate("Protected");
     // } catch (error) {
     //   console.error("Error saving signature:", error.message);
     //   Alert.alert("Error", "Failed to save signature. Please try again.");
@@ -119,11 +119,16 @@ const TabThreeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    margin:0,
+    padding:0,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // height: 500,
-    padding: 20,
+    height: 500,
+    width: 400,
+    paddingTop: 50,
+
+    padding: 10,
   },
   preview: {
     width: 335,
